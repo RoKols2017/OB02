@@ -1,61 +1,82 @@
 class User:
     def __init__(self, user_id, name):
-        self._id = user_id
+        # Уникальный идентификатор пользователя
+        self._user_id = user_id
+        # Имя пользователя
         self._name = name
-        self._access_level = 'user'
+        # Уровень доступа (по умолчанию "user")
+        self._access_level='user'
 
-    @property
-    def id(self):
-        return self._id
+    # Получить ID пользователя
+    def get_user_id(self):
+        return self._user_id
 
-    @property
-    def name(self):
+    # Получить имя пользователя
+    def get_name(self):
         return self._name
 
-    @property
-    def access_level(self):
+    # Установить новое имя пользователя
+    def set_name(self, name):
+        self._name = name
+
+    # Получить уровень доступа пользователя
+    def get_access_level(self):
         return self._access_level
 
-    def __repr__(self):
-        return f"User(id={self.id}, name='{self.name}', access_level='{self.access_level}')"
-
-
 class Admin(User):
-    def __init__(self, admin_id, name):
-        super().__init__(admin_id, name)
-        self._access_level = 'admin'
-        self.users = []
+    def __init__(self, user_id, name):
+        # Инициализация базового класса User с уровнем доступа "admin"
+        super().__init__(user_id, name)
+        # Дополнительный уровень доступа для администратора
+        self._admin_access_level='admin'
 
-    def add_user(self, new_user):
-        if isinstance(new_user, User):
-            self.users.append(new_user)
-        else:
-            raise TypeError("new_user must be an instance of the User class")
+    # Получить уровень доступа администратора
+    def get_admin_access_level(self):
+        return self._admin_access_level
 
-    def remove_user(self, user_to_remove):
-        try:
-            self.users.remove(user_to_remove)
-        except ValueError as e:
-            print(f"User not found in the list: {e}")
+    # Добавить пользователя в систему
+    def add_user(self, user_list, user):
+        users_list.append(user)
+        print(f"Пользователь {user.get_name()} успешно добавлен.")
 
-# Создание обычного пользователя
-john = User(1, "John Doe")
-print(john)  # Output: User(id=1, name='John Doe', access_level='user')
+    # Удалить пользователя из системы по ID
+    def remove_user(self, users_list, user):
+        users_list.remove(user)
+        print(f"Пользователь {user.get_name()} успешно удален.")
 
-# Создание администратора
-alice = Admin(2, "Alice Smith")
-print(alice)  # Output: User(id=2, name='Alice Smith', access_level='admin')
+# Вывести список всех пользователей в системе
+def list_users(users_list):
+    if not users_list:
+        print("В системе нет пользователей.")
+    else:
+        print("Список пользователей в системе:")
+        for user in users_list:
+            print(f"Пользователь {user.get_name()}")
 
-# Добавляем Джона в список пользователей Алисы
-alice.add_user(john)
-print(alice.users)  # Output: [User(id=1, name='John Doe', access_level='user')]
+# Пример использования
+if __name__ == "__main__":
+    # Список всех пользователей в системе
+    users_list = []
 
-# Пытаемся добавить объект, который не является пользователем
-try:
-    alice.add_user("Not a user object")
-except TypeError as e:
-    print(e)  # Output: new_user must be an instance of the User class
+    # Вывод списка пользователей
+    list_users(users_list)
 
-# Удаляем Джона из списка пользователей Алисы
-alice.remove_user(john)
-print(alice.users)  # Output: []
+    # Создание пользователей
+    user1 = User(1, "Алексей")
+    user2 = User(2, "Мария")
+
+    # Создание администратора
+    admin1 = Admin(0, "Иван")
+
+    # Добавление пользователей в список админа1
+    admin1.add_user(users_list, user1)
+    admin1.add_user(users_list, user2)
+
+    # Вывод списка пользователей
+    list_users(users_list)
+
+    # Удаление пользователя
+    admin1.remove_user(users_list, user1)
+
+    # Вывод списка пользователей после удаления
+    list_users(users_list)
